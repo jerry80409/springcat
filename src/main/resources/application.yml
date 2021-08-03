@@ -1,0 +1,28 @@
+# 開發環境用的 config 設定
+debug: true
+
+server:
+  port: ${PORT:8080}
+  shutdown: graceful
+  compression:
+    enabled: true
+
+spring:
+  application:
+    name: springcat
+  freemarker:
+    cache: false
+  datasource:
+    username: sa
+    password:
+    url: jdbc:h2:mem:springcat;MODE=PostgreSQL
+  jpa:
+    database: h2
+    generate-ddl: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /h2
