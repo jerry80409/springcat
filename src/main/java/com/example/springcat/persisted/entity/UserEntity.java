@@ -12,6 +12,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -48,6 +49,7 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
      * user display name
      */
     @NotBlank
+    @Size(max = 128)
     @Column(name = "name", nullable = false,
         columnDefinition = "varchar(128) comment '顯示使用者名稱'")
     private String name;
@@ -56,6 +58,7 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
      * email
      */
     @NotBlank
+    @Size(max = 255)
     @Column(name = "email", nullable = false,
         columnDefinition = "varchar(255) comment '使用者信箱, 重新設定, 忘記密碼使用'")
     private String email;
@@ -63,6 +66,7 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
     /**
      * avatar uri or code ?
      */
+    @Size(max = 255)
     @Column(name = "avatar",
         columnDefinition = "varchar(255) comment '頭像代號, 頭像素材庫的代號'")
     private String avatar;
@@ -70,6 +74,7 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
     /**
      * remember me
      */
+    @Size(max = 255)
     @Column(name = "remember_token",
         columnDefinition = "varchar(255) comment '用於紀錄 user 登入期間的 token'")
     private String rememberToken;

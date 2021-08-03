@@ -51,4 +51,17 @@ public class UserInfoService {
             .map(userInfoMapper::from)
             .collect(Collectors.toList());
     }
+
+    /**
+     * find by email
+     *
+     * @param email user email
+     * @return user info
+     */
+    public UserInfo getByEmail(String email) {
+        return userRepository
+            .findByEmail(email)
+            .map(userInfoMapper::from)
+            .orElseThrow(() -> new RuntimeException(String.format("Could not found user(%s).", email)));
+    }
 }
