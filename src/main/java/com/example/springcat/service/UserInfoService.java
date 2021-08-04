@@ -30,6 +30,7 @@ public class UserInfoService {
     /**
      * 畫面顯示類的 CRUD 盡量使用 Page 作為回傳, 避免大量資料造成 OOM
      */
+    @Transactional(readOnly = true)
     public Page<UserInfo> getAll (Pageable pageable) {
         return userInfoMapper.from(userRepository.findAll(pageable));
     }
