@@ -28,7 +28,7 @@ spring:
       path: /h2
 
 logging:
-  level: debug
-  org.hibernate.SQL: debug
-  org.hibernate.type: trace
-
+  level:
+    root: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
