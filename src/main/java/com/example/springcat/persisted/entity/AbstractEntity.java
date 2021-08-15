@@ -1,14 +1,18 @@
 package com.example.springcat.persisted.entity;
 
+import static com.example.springcat.persisted.entity.Status.ACTIVATED;
+import static javax.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import lombok.AllArgsConstructor;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -61,10 +65,17 @@ abstract class AbstractEntity<U extends Serializable> implements Serializable {
     protected LocalDateTime lastModifiedDate;
 
     /**
+     * 狀態
+     */
+    @Default
+    @Enumerated(STRING)
+    @Column(name = "status")
+    protected Status status = ACTIVATED;
+
+    /**
      * 版本, 樂觀鎖
      */
     @Version
     @Column(name = "version")
-    long version;
-
+    protected long version;
 }
