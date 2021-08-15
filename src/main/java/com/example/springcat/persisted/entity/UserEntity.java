@@ -32,7 +32,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor(access = PRIVATE)
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "user",
+@Table(
     indexes = {@Index(columnList = "email", name = "idx_user_email")},
     uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 public class UserEntity extends AbstractEntity<String> implements Serializable {

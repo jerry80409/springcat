@@ -29,9 +29,11 @@ spring:
   jpa:
     database: h2
     generate-ddl: true
-    open-in-view: false
     hibernate:
       ddl-auto: update
+      naming:
+        physical-strategy: com.example.springcat.config.support.TableNamingStrategyConfig
+    open-in-view: false
 
 logging:
   level:
