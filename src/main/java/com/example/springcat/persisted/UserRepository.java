@@ -4,6 +4,7 @@ import com.example.springcat.persisted.entity.UserEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repository 繼承 JpaRepository 裡面包含 (PagingAndSortingRepository, QueryByExampleExecutor, CrudRepository)
@@ -18,5 +19,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      * @param email find by user email
      * @return user entity
      */
+    @Transactional(readOnly = true)
     Optional<UserEntity> findByEmail (String email);
 }
