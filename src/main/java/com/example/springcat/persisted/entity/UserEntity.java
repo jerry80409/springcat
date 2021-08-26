@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -64,12 +66,40 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
     private String email;
 
     /**
+     * password
+     */
+    @NotBlank
+    @Column(name = "paswrd", nullable = false,
+        columnDefinition = "varchar(255) comment '使用者密碼, 認證使用'")
+    private String paswrd;
+
+    /**
      * avatar uri or code ?
      */
     @Size(max = 255)
     @Column(name = "avatar",
         columnDefinition = "varchar(255) comment '頭像代號, 頭像素材庫的代號'")
     private String avatar;
+
+    /**
+     * user 是否啟用
+     */
+    @Default
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled = false;
+
+    /**
+     * email 認證時間
+     */
+    @Column(name = "email_verified_at")
+    private LocalDateTime emailVerifiedAt;
+
+    /**
+     * 帳號鎖定
+     */
+    @Default
+    @Column(name = "locked", nullable = false)
+    private boolean locked = false;
 
     /**
      * remember me

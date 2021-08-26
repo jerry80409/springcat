@@ -32,7 +32,7 @@ spring:
     hibernate:
       ddl-auto: update
       naming:
-        physical-strategy: com.example.springcat.config.support.TableNamingStrategyConfig
+        physical-strategy: com.example.springcat.config.TableNamingStrategyConfig
     open-in-view: false
 
 logging:
