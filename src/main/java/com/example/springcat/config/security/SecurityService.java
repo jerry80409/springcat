@@ -1,4 +1,4 @@
-package com.example.springcat.service;
+package com.example.springcat.config.security;
 
 import static lombok.AccessLevel.PACKAGE;
 
@@ -13,12 +13,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
- * 授權 service
+ * 授權 service, 用來從資料庫取得 user 的細節
+ *
+ * ref: https://docs.spring.io/spring-security/site/docs/current/reference/html5/#servlet-authentication-jdbc-bean
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor(access = PACKAGE)
-public class SecurityService implements UserDetailsService {
+class SecurityService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -28,7 +30,9 @@ public class SecurityService implements UserDetailsService {
         return userRepository.findByEmail(userAccount)
             .map(user -> User.builder()
                 .username(user.getName())
-                .password("")
+                .password(user.getPaswrd())
+                .disabled(!user.isEnabled())
+                .accountLocked(user.isLocked())
                 .build())
             .orElseThrow(() -> new NotFoundException("user 不存在"));
     }

@@ -1,6 +1,5 @@
-package com.example.springcat.config;
+package com.example.springcat.config.security;
 
-import com.example.springcat.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -90,10 +89,22 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated();
     }
 
+    /**
+     * 覆寫此方法, 會覆寫 AuthenticationManager 透過 AuthenticationManagerBuilder.
+     * AuthenticationManager 是用來驗證 Authentication 物件的, 驗證過後的 Authentication 才會被設定到 SecurityContextHolder.
+     * userDetailsService: 用來查詢 user
+     * passwordEncoder: 用來加密密碼, 採用 Argon2PasswordEncoder 因為單純是因為它是密碼比賽冠軍, 因為比較新所以安全性高一點!?
+     *
+     * ref: https://docs.spring.io/spring-security/site/docs/current/reference/html5/#servlet-authentication-authenticationmanager
+     * @param auth
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
             .userDetailsService(securityService)
+//            .userDetailsPasswordManager(null)
+//            .withObjectPostProcessor(null)
             .passwordEncoder(new Argon2PasswordEncoder());
     }
 }
