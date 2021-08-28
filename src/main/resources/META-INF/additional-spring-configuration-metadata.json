@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "jwt.sign-key",
+      "type": "java.lang.String",
+      "description": "JWT token signature key."
+    },
+    {
+      "name": "jwt.expire-time-sec",
+      "type": "java.lang.String",
+      "description": "JWT token effective time."
+    }
+  ]
+}

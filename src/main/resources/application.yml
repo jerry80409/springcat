@@ -41,7 +41,8 @@ spring:
     lazy-initialization: true
 
 jwt:
-  secret: meow!
+    sign-key: meow...meow...meow...
+    expire-time-sec: 3600_000
 
 logging:
   level:

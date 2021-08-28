@@ -2,6 +2,7 @@ package com.example.springcat.security.config;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -14,5 +15,10 @@ class JwtProperties {
     /**
      * JWT secret for signature.
      */
-    private @Valid @NotBlank String secret;
+    private @Valid @NotBlank String signKey;
+
+    /**
+     * JWT token effective time.
+     */
+    private @Valid @NotNull Long expireTimeSec;
 }

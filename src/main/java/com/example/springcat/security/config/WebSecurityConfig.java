@@ -2,13 +2,16 @@ package com.example.springcat.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Spring boot security 大致上分為 2 個區塊, Authentication (認證) 與 Authorization (授權)
@@ -40,7 +43,7 @@ import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
  * HMAC (HS256, RS256, ES256)則是現在常聽到的 JWT token 常用的簽名技術, server 則會設定一組 secret 來辨識簽名 (公/私鑰),
  * ref: https://iter01.com/427745.html
  *
- * 而產生公/私鑰的方法, 又有 JWE, JWS (實作處理公私鑰的流程不同, 就不細說了)
+ * HS256 在設定上較為單純, RS256, ES256 則是需要公/私鑰
  * ref: https://5xruby.tw/posts/what-is-jwt
  *
  * 此專案會使用 Oauth0 的 JWT library
@@ -79,7 +82,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-            .antMatchers("**")  // unmark this for testing
+            // .antMatchers("**")  // unmark this for testing
             .antMatchers(h2Console, h2Console + "/**");
     }
 
@@ -102,6 +105,17 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
+     * 複寫此方法, 用於提供自定義的 UserDetailsService 給 AuthenticationManagerBuilder
+     *
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public UserDetailsService userDetailsServiceBean() throws Exception {
+        return securityService;
+    }
+
+    /**
      * 覆寫此方法, 會覆寫 AuthenticationManager 透過 AuthenticationManagerBuilder.
      * AuthenticationManager 是用來驗證 Authentication 物件的, 驗證過後的 Authentication 才會被設定到 SecurityContextHolder.
      * userDetailsService: 用來查詢 user
@@ -117,6 +131,11 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .userDetailsService(securityService)
 //            .userDetailsPasswordManager(null)
 //            .withObjectPostProcessor(null)
-            .passwordEncoder(new Argon2PasswordEncoder());
+            .passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new Argon2PasswordEncoder();
     }
 }
