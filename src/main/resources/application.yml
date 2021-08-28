@@ -1,3 +1,5 @@
+# ref: https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+
 # 開發環境用的 config 設定
 debug: true
 
@@ -19,7 +21,7 @@ spring:
   datasource:
     username: sa
     password:
-    url: jdbc:h2:mem:springcat;MODE=PostgreSQL
+    url: jdbc:h2:mem:springcat;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;
   freemarker:
     cache: false
   h2:
@@ -34,6 +36,9 @@ spring:
       naming:
         physical-strategy: com.example.springcat.config.TableNamingStrategyConfig
     open-in-view: false
+  main:
+    banner-mode: console
+    lazy-initialization: true
 
 logging:
   level:
