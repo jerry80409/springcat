@@ -79,6 +79,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
+            .antMatchers("**")  // unmark this for testing
             .antMatchers(h2Console, h2Console + "/**");
     }
 
