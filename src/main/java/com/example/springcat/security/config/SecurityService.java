@@ -1,4 +1,4 @@
-package com.example.springcat.config.security;
+package com.example.springcat.security.config;
 
 import static lombok.AccessLevel.PACKAGE;
 

@@ -1,4 +1,4 @@
-package com.example.springcat.config.security;
+package com.example.springcat.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

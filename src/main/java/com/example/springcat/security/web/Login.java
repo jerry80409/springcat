@@ -1,4 +1,4 @@
-package com.example.springcat.web;
+package com.example.springcat.security.web;
 
 import static java.lang.Boolean.TRUE;
 import static lombok.AccessLevel.PACKAGE;

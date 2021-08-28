@@ -1,4 +1,4 @@
-package com.example.springcat.web;
+package com.example.springcat.security.web;
 
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
