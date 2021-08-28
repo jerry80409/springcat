@@ -40,6 +40,9 @@ spring:
     banner-mode: console
     lazy-initialization: true
 
+jwt:
+  secret: meow!
+
 logging:
   level:
     root: debug
