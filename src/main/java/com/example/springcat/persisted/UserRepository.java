@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
  * 基本上已經很夠用了
  */
 @Repository
+@Transactional
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     /**

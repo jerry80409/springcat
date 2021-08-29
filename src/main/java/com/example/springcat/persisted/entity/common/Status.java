@@ -1,4 +1,4 @@
-package com.example.springcat.persisted.entity;
+package com.example.springcat.persisted.entity.common;
 
 public enum Status {
     /**

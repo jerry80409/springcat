@@ -1,9 +1,10 @@
 package com.example.springcat.persisted.entity;
 
-import static com.example.springcat.persisted.entity.Status.ACTIVATED;
+import static com.example.springcat.persisted.entity.common.Status.ACTIVATED;
 import static javax.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PRIVATE;
 
+import com.example.springcat.persisted.entity.common.Status;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;

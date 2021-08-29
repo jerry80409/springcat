@@ -1,15 +1,21 @@
 package com.example.springcat.persisted.entity;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
+import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +25,7 @@ import lombok.Builder.Default;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -108,5 +115,13 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
     @Column(name = "remember_token",
         columnDefinition = "varchar(255) comment '用於紀錄 user 登入期間的 token'")
     private String rememberToken;
+
+    /**
+     * user roles, join on role table
+     */
+    @Singular
+    @JoinColumn(name = "user_id")
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private Set<RoleEntity> roles = Sets.newHashSet();
 
 }
