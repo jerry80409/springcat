@@ -1,4 +1,4 @@
-package com.example.springcat.security.config;
+package com.example.springcat.security.jwt;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

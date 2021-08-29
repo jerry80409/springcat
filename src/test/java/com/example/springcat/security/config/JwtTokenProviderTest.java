@@ -3,6 +3,7 @@ package com.example.springcat.security.config;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.example.springcat.security.jwt.JwtTokenProvider;
 import java.util.Arrays;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ class JwtTokenProviderTest {
     private JwtTokenProvider provider;
 
     @Test
-    void verify_jwt_is_success() {
+    void shouldVerifyJwtSuccess() {
         val principal = "Springcat";
         val authorities = Arrays.asList(
             new SimpleGrantedAuthority("USER"),

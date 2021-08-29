@@ -1,8 +1,12 @@
-package com.example.springcat.security.config;
+package com.example.springcat.security.jwt;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.AlgorithmMismatchException;
+import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -18,6 +22,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+/**
+ * ref: https://github.com/auth0/java-jwt
+ */
 @Slf4j
 @Component
 @EnableConfigurationProperties(JwtProperties.class)
@@ -48,6 +55,14 @@ public class JwtTokenProvider {
 
     /**
      * Verify the JWT
+     *
+     * @param token
+     * @return Authentication
+     * @throws AlgorithmMismatchException if the algorithm stated in the token's header it's not equal to the one defined in the
+     * {@link JWTVerifier}.
+     * @throws SignatureVerificationException if the signature is invalid.
+     * @throws TokenExpiredException if the token has expired.
+     * @throws InvalidClaimException if a claim contained a different value than the expected one.
      */
     public Authentication verify(String token) {
         val jwt = parseToken(token);
@@ -90,7 +105,11 @@ public class JwtTokenProvider {
     /**
      * Parse the JWT
      *
+     * @throws AlgorithmMismatchException if the algorithm stated in the token's header it's not equal to the one defined in the
+     * {@link JWTVerifier}.
      * @throws SignatureVerificationException if the signature is invalid.
+     * @throws TokenExpiredException if the token has expired.
+     * @throws InvalidClaimException if a claim contained a different value than the expected one.
      */
     private DecodedJWT parseToken(String token) {
         val alg = Algorithm.HMAC256(properties.getSignKey());

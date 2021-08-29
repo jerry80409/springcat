@@ -1,17 +1,25 @@
 package com.example.springcat.security.config;
 
+import static com.example.springcat.persisted.entity.Status.ACTIVATED;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+import com.example.springcat.persisted.UserRepository;
+import com.example.springcat.persisted.entity.UserEntity;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * Spring boot security 大致上分為 2 個區塊, Authentication (認證) 與 Authorization (授權)
@@ -60,12 +68,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    public static final String AUTH_ENDPOINT = "/auth";
 
     @Value("${spring.h2.console.path}")
     private String h2Console;
 
     private final SecurityService securityService;
+    private final JwtFilter jwtFilter;
+    private final UserRepository userRepository;
 
     /**
      * 白名單:
@@ -100,26 +112,22 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-            .anyRequest().authenticated();
-    }
-
-    /**
-     * 複寫此方法, 用於提供自定義的 UserDetailsService 給 AuthenticationManagerBuilder
-     *
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return securityService;
+            .cors().and().csrf().disable()   // 允許 Cross domain, 且停用 CSRF Token 驗證
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // 加入 jwt token 驗證
+            .exceptionHandling()
+            .authenticationEntryPoint(new UnauthenticatedEntryPoint())
+            .and()
+            .sessionManagement().sessionCreationPolicy(STATELESS)   // Servlet 不在產生 Session
+            .and()
+            .authorizeRequests().antMatchers(AUTH_ENDPOINT + "/**").permitAll() // 此 URL 路徑底下的皆可以通過
+            .anyRequest().authenticated(); // 其餘的 request 皆需要 authenticated
     }
 
     /**
      * 覆寫此方法, 會覆寫 AuthenticationManager 透過 AuthenticationManagerBuilder.
      * AuthenticationManager 是用來驗證 Authentication 物件的, 驗證過後的 Authentication 才會被設定到 SecurityContextHolder.
      * userDetailsService: 用來查詢 user
-     * passwordEncoder: 用來加密密碼, 採用 Argon2PasswordEncoder 因為單純是因為它是密碼比賽冠軍, 因為比較新所以安全性高一點!?
+     * passwordEncoder: 用來加密密碼, 採用 BCryptPasswordEncoder
      *
      * ref: https://docs.spring.io/spring-security/site/docs/current/reference/html5/#servlet-authentication-authenticationmanager
      * @param auth
@@ -129,13 +137,49 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
             .userDetailsService(securityService)
-//            .userDetailsPasswordManager(null)
-//            .withObjectPostProcessor(null)
             .passwordEncoder(passwordEncoder());
+    }
+
+
+
+    /**
+     * Override this method to expose the {@link AuthenticationManager} from {@link
+     * #configure(AuthenticationManagerBuilder)} to be exposed as a Bean. For example:
+     *
+     * <pre>
+     * &#064;Bean(name name="myAuthenticationManager")
+     * &#064;Override
+     * public AuthenticationManager authenticationManagerBean() throws Exception {
+     *     return super.authenticationManagerBean();
+     * }
+     * </pre>
+     *
+     * @return the {@link AuthenticationManager}
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new Argon2PasswordEncoder();
+        return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * FIXME for login test
+     */
+    @PostConstruct
+    public void init() {
+        val user = UserEntity.builder()
+            .name("jerry")
+            .email("jerry@email.com")
+            .paswrd(passwordEncoder().encode("abcd"))
+            .enabled(true)
+            .locked(false)
+            .status(ACTIVATED)
+            .build();
+        userRepository.save(user);
     }
 }
