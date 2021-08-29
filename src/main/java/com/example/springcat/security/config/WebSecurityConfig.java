@@ -1,9 +1,11 @@
 package com.example.springcat.security.config;
 
+import static com.example.springcat.persisted.entity.common.Role.ADMIN;
 import static com.example.springcat.persisted.entity.common.Status.ACTIVATED;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.example.springcat.persisted.UserRepository;
+import com.example.springcat.persisted.entity.RoleEntity;
 import com.example.springcat.persisted.entity.UserEntity;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -163,7 +165,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .enabled(true)
             .locked(false)
             .status(ACTIVATED)
+            .role(RoleEntity.builder().code(ADMIN).value(1).build())
             .build();
+
         userRepository.save(user);
     }
 }

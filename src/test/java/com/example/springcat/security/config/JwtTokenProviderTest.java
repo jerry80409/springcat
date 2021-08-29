@@ -26,7 +26,7 @@ class JwtTokenProviderTest {
             new SimpleGrantedAuthority("ADMIN")
         );
 
-        val beforeAuth = new  UsernamePasswordAuthenticationToken(principal, null, authorities);
+        val beforeAuth = new UsernamePasswordAuthenticationToken(principal, null, authorities);
         val jwt = provider.createToken(beforeAuth);
         val afterAuth = provider.verify(jwt);
 
