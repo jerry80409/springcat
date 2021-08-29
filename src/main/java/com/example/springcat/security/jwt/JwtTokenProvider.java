@@ -30,6 +30,8 @@ import org.springframework.stereotype.Component;
 @EnableConfigurationProperties(JwtProperties.class)
 public class JwtTokenProvider {
 
+    public static final String BEARER_TOKEN = "Bearer ";
+
     private static final String USER_ROLES = "userRoles";
     private static final long ADMIN_EXPIRE_TIME_SEC = 60 * 60 * 24 * 1000;
 

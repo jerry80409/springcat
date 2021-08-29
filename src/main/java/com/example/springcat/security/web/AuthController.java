@@ -1,5 +1,7 @@
 package com.example.springcat.security.web;
 
+import static com.example.springcat.security.jwt.JwtTokenProvider.BEARER_TOKEN;
+
 import com.example.springcat.security.jwt.JwtTokenProvider;
 import com.example.springcat.security.config.WebSecurityConfig;
 import java.util.Arrays;
@@ -38,6 +40,6 @@ class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // create token
-        return ResponseEntity.ok(jwtTokenProvider.createToken(authentication));
+        return ResponseEntity.ok(BEARER_TOKEN + jwtTokenProvider.createToken(authentication));
     }
 }

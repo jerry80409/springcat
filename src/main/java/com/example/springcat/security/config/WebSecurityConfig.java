@@ -1,6 +1,6 @@
 package com.example.springcat.security.config;
 
-import static com.example.springcat.persisted.entity.Status.ACTIVATED;
+import static com.example.springcat.persisted.entity.common.Status.ACTIVATED;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 import com.example.springcat.persisted.UserRepository;
@@ -14,7 +14,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -79,33 +78,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtFilter jwtFilter;
     private final UserRepository userRepository;
 
-    /**
-     * 白名單:
-     * 設定某些 request 不被 security 認證(Authenticate), 則覆寫此 method.
-     * 舉例,
-     * <code>
-     *     // 忽略由 /h2 url 進來的 request
-     *     web.ignoring().antMatchers("/h2", "/h2/**");
-     * </code>
+    /**:
+     * 設定 servlet 的 request 處理
+     * cors() 允許 cross domain 的 request
+     * csrf().disable() 停用 csrf token filter 檢查
+     * addFilterBefore() 加入 jwt token filter 在 UsernamePasswordAuthenticationFilter 檢核之前
+     * exceptionHandling.authenticationEntryPoint() 用來將認證沒通過的 request 做 redirect, 但 jwt 不適合, 故回傳 error json
      *
-     * @param web
-     * @throws Exception
-     */
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-            // .antMatchers("**")  // unmark this for testing
-            .antMatchers(h2Console, h2Console + "/**");
-    }
-
-    /**
-     * 黑名單:
-     * 設定 request 要用哪些方式認證(Authenticate), 則覆寫此 method.
-     * 舉例,
-     * <code>
-     *     // 所有的 request 都需要被認證(authenticated), 且
-     *     http.authorizeRequests().anyRequest().authenticated().and().formLogin().and().httpBasic();
-     * </code>
      * @param http
      * @throws Exception
      */
@@ -113,13 +92,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .cors().and().csrf().disable()   // 允許 Cross domain, 且停用 CSRF Token 驗證
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // 加入 jwt token 驗證
+            .headers().frameOptions().disable()
+            .and()
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling()
             .authenticationEntryPoint(new UnauthenticatedEntryPoint())
             .and()
-            .sessionManagement().sessionCreationPolicy(STATELESS)   // Servlet 不在產生 Session
+            .sessionManagement().sessionCreationPolicy(STATELESS)
             .and()
-            .authorizeRequests().antMatchers(AUTH_ENDPOINT + "/**").permitAll() // 此 URL 路徑底下的皆可以通過
+            .authorizeRequests()
+            .antMatchers("/").permitAll()
+            .antMatchers(h2Console + "/**").permitAll()
+            .antMatchers(AUTH_ENDPOINT + "/**").permitAll()
             .anyRequest().authenticated(); // 其餘的 request 皆需要 authenticated
     }
 

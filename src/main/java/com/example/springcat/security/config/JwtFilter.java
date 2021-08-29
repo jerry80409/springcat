@@ -1,5 +1,6 @@
 package com.example.springcat.security.config;
 
+import static com.example.springcat.security.jwt.JwtTokenProvider.BEARER_TOKEN;
 import static lombok.AccessLevel.PACKAGE;
 
 import com.example.springcat.security.jwt.JwtTokenProvider;
@@ -31,8 +32,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 @RequiredArgsConstructor(access = PACKAGE)
 class JwtFilter extends OncePerRequestFilter {
-
-    private static final String BEARER_TOKEN = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
 
