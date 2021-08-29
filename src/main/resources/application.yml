@@ -42,7 +42,7 @@ spring:
 
 jwt:
     sign-key: meow...meow...meow...
-    expire-time-sec: 3600_000
+    expire-time-sec: 3600000
 
 logging:
   level:

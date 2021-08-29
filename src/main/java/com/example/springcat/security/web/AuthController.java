@@ -1,10 +1,10 @@
 package com.example.springcat.security.web;
 
 import static com.example.springcat.security.jwt.JwtTokenProvider.BEARER_TOKEN;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import com.example.springcat.security.jwt.JwtTokenProvider;
 import com.example.springcat.security.config.WebSecurityConfig;
-import java.util.Arrays;
+import com.example.springcat.security.jwt.JwtTokenProvider;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,12 +33,11 @@ class AuthController {
     ResponseEntity<String> login(@Valid @RequestBody Login login) {
         // authenticate and set authentication to security context
         val authentication = authenticationManager
-            .authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPaswrd(), Arrays.asList(
-                new SimpleGrantedAuthority("USER"), new SimpleGrantedAuthority("ADMIN")
-            )));
+            .authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPaswrd()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // create token
-        return ResponseEntity.ok(BEARER_TOKEN + jwtTokenProvider.createToken(authentication));
+        val token = BEARER_TOKEN + jwtTokenProvider.createToken(authentication);
+        return ResponseEntity.ok().header(AUTHORIZATION, token).body(token);
     }
 }

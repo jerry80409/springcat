@@ -15,6 +15,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
+/**
+ * 授權驗證失敗, 回傳錯誤訊息
+ */
 @Slf4j
 class UnauthenticatedEntryPoint implements AuthenticationEntryPoint {
 

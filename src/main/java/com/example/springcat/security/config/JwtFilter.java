@@ -63,7 +63,7 @@ class JwtFilter extends OncePerRequestFilter {
     private String retrieveJwt(HttpServletRequest request) {
         val authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (Strings.isNotBlank(authorization) && authorization.startsWith(BEARER_TOKEN)) {
-            return authorization.substring(BEARER_TOKEN.length() + 1);
+            return authorization.split("\\s+")[1];
         }
         return "";
     }

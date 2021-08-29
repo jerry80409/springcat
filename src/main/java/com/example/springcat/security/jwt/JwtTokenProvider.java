@@ -1,5 +1,7 @@
 package com.example.springcat.security.jwt;
 
+import static com.example.springcat.persisted.entity.common.Role.ADMIN;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -51,7 +53,7 @@ public class JwtTokenProvider {
      */
     public String createToken(Authentication auth) {
         val isAdmin = ((UsernamePasswordAuthenticationToken) auth).getAuthorities()
-            .contains(new SimpleGrantedAuthority("ADMIN"));
+            .contains(new SimpleGrantedAuthority(ADMIN.name()));
         return createToken(auth, isAdmin);
     }
 
@@ -70,7 +72,7 @@ public class JwtTokenProvider {
         val jwt = parseToken(token);
         val userRoles = Stream.of(jwt.getClaim(USER_ROLES).asArray(String.class))
             .map(SimpleGrantedAuthority::new)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
         // Credentials 就用 jwt token 取代
         return new UsernamePasswordAuthenticationToken(jwt.getSubject(), token, userRoles);
     }
@@ -90,7 +92,6 @@ public class JwtTokenProvider {
             .withIssuedAt(new Date(System.currentTimeMillis())) // 簽發時間
             .withArrayClaim(USER_ROLES, userRoles);   // 對象 payload
 
-
         val expired = System.currentTimeMillis() + properties.getExpireTimeSec();
         val adminExpired = System.currentTimeMillis() + ADMIN_EXPIRE_TIME_SEC;
         if (isAdmin) {
@@ -100,7 +101,7 @@ public class JwtTokenProvider {
         }
 
         val jwt = jwtBuilder.sign(alg);
-        log.debug("user({}) token: {}", auth.getName(), jwt);
+        log.debug("User({}) token: {}", auth.getName(), jwt);
         return jwt;
     }
 
@@ -117,7 +118,7 @@ public class JwtTokenProvider {
         val alg = Algorithm.HMAC256(properties.getSignKey());
         val verifier = JWT.require(alg).build();
         val jwt = verifier.verify(token);
-        log.debug("user({}) token verify", jwt.getSubject());
+        log.debug("User({}) token verify success", jwt.getSubject());
         return jwt;
     }
 }
