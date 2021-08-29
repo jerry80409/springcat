@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 class SecurityService implements UserDetailsService {
 
-
     private final UserRepository userRepository;
 
     /**

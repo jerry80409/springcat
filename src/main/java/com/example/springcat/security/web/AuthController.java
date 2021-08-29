@@ -28,7 +28,6 @@ class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
-
     @PostMapping("/login")
     ResponseEntity<String> login(@Valid @RequestBody Login login) {
         // authenticate and set authentication to security context
