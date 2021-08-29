@@ -1,4 +1,4 @@
-package com.example.springcat.config.constant;
+package com.example.springcat;
 
 public final class PageConst {
 

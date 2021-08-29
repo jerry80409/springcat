@@ -1,4 +1,4 @@
-package com.example.springcat.config;
+package com.example.springcat.persisted.config;
 
 import lombok.val;
 import org.hibernate.boot.model.naming.Identifier;

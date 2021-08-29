@@ -1,7 +1,7 @@
 package com.example.springcat.web;
 
-import static com.example.springcat.config.constant.PageConst.DEFAULT_PAGE_SIZE;
-import static com.example.springcat.config.constant.PageConst.FIRST_PAGE;
+import static com.example.springcat.PageConst.DEFAULT_PAGE_SIZE;
+import static com.example.springcat.PageConst.FIRST_PAGE;
 
 import com.example.springcat.service.UserInfo;
 import com.example.springcat.service.UserInfoService;

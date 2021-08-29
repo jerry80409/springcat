@@ -34,7 +34,7 @@ spring:
     hibernate:
       ddl-auto: update
       naming:
-        physical-strategy: com.example.springcat.config.TableNamingStrategyConfig
+        physical-strategy: com.example.springcat.persisted.config.TableNamingStrategyConfig
     open-in-view: false
   main:
     banner-mode: console
