@@ -52,6 +52,13 @@ public class RoleEntity extends AbstractEntity<String> implements Serializable {
     private Role code;
 
     /**
+     * description
+     */
+    @Column(name = "desc",
+        columnDefinition = "varchar(255) comment '說明'")
+    private String desc;
+
+    /**
      * role value
      */
     @NotNull
