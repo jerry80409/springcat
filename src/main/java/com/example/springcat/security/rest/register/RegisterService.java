@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegisterService extends RegisterTemplate {
 
     private final UserRepository userRepo;
-    private final EmailVerificationRepository emailVerificationRepo;
+    private final EmailVerificationRepository emailVerificationRepo;    // todo 做 email 驗證
     private final RegisterMapper registerMapper;
     private final PasswordEncoder passwordEncoder;
 
