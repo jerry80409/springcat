@@ -44,6 +44,9 @@ jwt:
     sign-key: meow...meow...meow...
     expire-time-sec: 3600000
 
+storage:
+  upload-dir: './upload'
+
 logging:
   level:
     root: debug
