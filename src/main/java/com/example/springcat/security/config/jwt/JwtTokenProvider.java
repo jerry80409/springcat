@@ -1,4 +1,4 @@
-package com.example.springcat.security.jwt;
+package com.example.springcat.security.config.jwt;
 
 import static com.example.springcat.persisted.entity.common.Role.ADMIN;
 

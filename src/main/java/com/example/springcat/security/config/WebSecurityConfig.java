@@ -7,6 +7,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 import com.example.springcat.persisted.UserRepository;
 import com.example.springcat.persisted.entity.RoleEntity;
 import com.example.springcat.persisted.entity.UserEntity;
+import com.example.springcat.security.config.jwt.JwtFilter;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

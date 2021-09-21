@@ -1,9 +1,8 @@
-package com.example.springcat.security.config;
+package com.example.springcat.security.config.jwt;
 
-import static com.example.springcat.security.jwt.JwtTokenProvider.BEARER_TOKEN;
+import static com.example.springcat.security.config.jwt.JwtTokenProvider.BEARER_TOKEN;
 import static lombok.AccessLevel.PACKAGE;
 
-import com.example.springcat.security.jwt.JwtTokenProvider;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,7 +30,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 @Component
 @RequiredArgsConstructor(access = PACKAGE)
-class JwtFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
