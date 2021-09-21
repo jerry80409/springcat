@@ -24,12 +24,13 @@ public class StorageConfig {
 
     @Bean
     StorageDir storageDir() {
-        val path = Paths.get(properties.getUploadDir()).toAbsolutePath().normalize();
-        log.info("Initialing upload directory: {}", path.toString());
+        val uploadPath = Paths.get(properties.getUploadDir()).toAbsolutePath().normalize();
+
+        log.info("Initialing upload directory: {}", uploadPath.toString());
 
         try {
-            Files.createDirectories(path);
-            return StorageDir.builder().uploadDir(path).build();
+            Files.createDirectories(uploadPath);
+            return StorageDir.builder().uploadDir(uploadPath).build();
 
         } catch (IOException e) {
             throw new UnsupportedOperationException("Could not created the directory, please check the permission");

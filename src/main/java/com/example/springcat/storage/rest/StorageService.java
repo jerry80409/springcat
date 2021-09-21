@@ -24,12 +24,15 @@ class StorageService {
 
     private final StorageDir storageDir;
 
+
+
     /**
+     * store file
      *
      * @param file
      * @return
      */
-    public String storeFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file) {
         val fileName = Optional.ofNullable(file.getOriginalFilename())
             .map(StringUtils::cleanPath)
             .orElse("");
@@ -51,6 +54,7 @@ class StorageService {
     }
 
     /**
+     * download file
      *
      * @param fileName
      * @return
