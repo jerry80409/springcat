@@ -7,7 +7,6 @@ import static lombok.AccessLevel.PRIVATE;
 
 import com.google.common.collect.Sets;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -92,29 +92,17 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
      * user 是否啟用
      */
     @Default
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled", nullable = false,
+        columnDefinition = "boolean(1) comment 'user 是否啟用(驗證過)'")
     private boolean enabled = false;
-
-    /**
-     * email 認證時間
-     */
-    @Column(name = "email_verified_at")
-    private LocalDateTime emailVerifiedAt;
 
     /**
      * 帳號鎖定
      */
     @Default
-    @Column(name = "locked", nullable = false)
+    @Column(name = "locked", nullable = false,
+        columnDefinition = "boolean(1) comment 'user 是否被鎖定(不給登入)'")
     private boolean locked = false;
-
-    /**
-     * remember me
-     */
-    @Size(max = 255)
-    @Column(name = "remember_token",
-        columnDefinition = "varchar(255) comment '用於紀錄 user 登入期間的 token'")
-    private String rememberToken;
 
     /**
      * user roles, join on role table
@@ -124,4 +112,11 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<RoleEntity> roles = Sets.newHashSet();
 
+    /**
+     * user email verification record
+     * 不確定 1 對 1 的設計好不好, 單純希望讓欄位簡單一點, 所以區隔
+     */
+    @JoinColumn(name = "user_id")
+    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private EmailVerificationEntity verification;
 }

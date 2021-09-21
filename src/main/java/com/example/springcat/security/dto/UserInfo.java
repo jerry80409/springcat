@@ -1,4 +1,4 @@
-package com.example.springcat.service;
+package com.example.springcat.security.dto;
 
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PUBLIC;

@@ -1,10 +1,10 @@
-package com.example.springcat.security.web;
+package com.example.springcat.security.rest;
 
-import static java.lang.Boolean.TRUE;
 import static lombok.AccessLevel.PACKAGE;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -12,22 +12,30 @@ import lombok.Value;
 @Value
 @Builder
 @AllArgsConstructor(access = PACKAGE)
-class Login {
+public class Register {
 
     /**
-     * email
+     * user name
+     */
+    @NotNull
+    String name;
+
+    /**
+     * user email for authentication
      */
     @Email
     @NotBlank
     String email;
 
     /**
-     * password
+     * password for authentication
      */
+    @NotBlank
     String paswrd;
 
     /**
-     * remember me
+     * avatar
      */
-    Boolean rememberMe = TRUE;
+    String avatar;
+
 }

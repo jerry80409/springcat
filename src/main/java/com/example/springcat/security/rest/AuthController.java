@@ -1,10 +1,12 @@
-package com.example.springcat.security.web;
+package com.example.springcat.security.rest;
 
 import static com.example.springcat.security.jwt.JwtTokenProvider.BEARER_TOKEN;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 import com.example.springcat.security.config.WebSecurityConfig;
+import com.example.springcat.security.dto.UserInfo;
 import com.example.springcat.security.jwt.JwtTokenProvider;
+import com.example.springcat.security.rest.register.RegisterService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,12 @@ class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RegisterService registerService;
+
+    @PostMapping("/register")
+    ResponseEntity<UserInfo> register(@Valid @RequestBody Register register) throws Exception {
+        return ResponseEntity.ok(registerService.register(register));
+    }
 
     @PostMapping("/login")
     ResponseEntity<String> login(@Valid @RequestBody Login login) {

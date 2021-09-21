@@ -1,6 +1,7 @@
 package com.example.springcat.service;
 
 import com.example.springcat.persisted.UserRepository;
+import com.example.springcat.security.dto.UserInfo;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
