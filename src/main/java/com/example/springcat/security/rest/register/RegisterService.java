@@ -6,6 +6,7 @@ import com.example.springcat.persisted.entity.EmailVerificationEntity;
 import com.example.springcat.persisted.entity.UserEntity;
 import com.example.springcat.security.dto.UserInfo;
 import com.example.springcat.security.rest.Register;
+import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -68,11 +69,12 @@ public class RegisterService extends RegisterTemplate {
     protected void sendVerification(UserEntity user) throws Exception {
         log.info("Sending the email to the Register({})", user.getEmail());
         val hashCode = generatedHash();
-        user.setVerification(EmailVerificationEntity.builder()
+        user.setVerifications(Sets.newHashSet(EmailVerificationEntity.builder()
             .userId(user.getId())
             .code(hashCode)
             .expiredAt(LocalDateTime.now().plusDays(1L))
-            .build());
+            .build()));
+
         userRepo.save(user);
     }
 

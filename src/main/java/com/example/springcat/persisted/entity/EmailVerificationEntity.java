@@ -5,25 +5,16 @@ import static lombok.AccessLevel.PRIVATE;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-@Data
 @Entity
+@Setter
+@Getter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor(access = PRIVATE)
-@EqualsAndHashCode(callSuper = false)
 @Table(
     indexes = {@Index(columnList = "user_id", name = "idx_email_verification_user_id")},
     uniqueConstraints = {@UniqueConstraint(columnNames = {})})

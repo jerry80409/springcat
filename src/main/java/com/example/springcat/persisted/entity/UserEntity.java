@@ -8,24 +8,11 @@ import static lombok.AccessLevel.PRIVATE;
 import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
+import lombok.*;
 import lombok.Builder.Default;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
 import lombok.experimental.SuperBuilder;
 
 /**
@@ -35,12 +22,12 @@ import lombok.experimental.SuperBuilder;
  * 藉由 lombok 的 annotations 自動在 compiler 階段幫助產生 setter, getter, builder, hashcode, equals 等方法
  * 藉由 NotBlank annotations (validation) 自動檢查
  */
-@Data
 @Entity
+@Getter
+@Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor(access = PRIVATE)
-@EqualsAndHashCode(callSuper = false)
 @Table(
     indexes = {@Index(columnList = "email", name = "idx_user_email")},
     uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
@@ -117,6 +104,6 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
      * 不確定 1 對 1 的設計好不好, 單純希望讓欄位簡單一點, 所以區隔
      */
     @JoinColumn(name = "user_id")
-    @OneToOne(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private EmailVerificationEntity verification;
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
+    private Set<EmailVerificationEntity> verifications;
 }
