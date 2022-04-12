@@ -4,8 +4,10 @@ import com.example.springcat.persisted.entity.UserEntity;
 import com.example.springcat.security.dto.UserInfo;
 import com.example.springcat.security.rest.Register;
 import lombok.val;
+import org.springframework.transaction.annotation.Transactional;
 
-abstract class RegisterTemplate {
+@Transactional
+public abstract class RegisterTemplate {
 
     /**
      * template method pattern
@@ -14,9 +16,9 @@ abstract class RegisterTemplate {
      * @throws Exception sending email fail
      * @return
      */
-    final UserInfo createUserAndSendEmail(Register source) throws Exception {
+    public final UserInfo createUserAndSendEmail(Register source) throws Exception {
         val user = createUser(source);
-        sendVerification(user);
+        sendVerification(user); // FIXME. spring boot 的方法內部呼叫 (A method invoke B method) 會導致 Transactional 失效, 故這個 design pattern 不可行
         return convert(user);
     }
 
