@@ -3,12 +3,15 @@ package com.example.springcat.security.rest.register;
 import com.example.springcat.persisted.EmailVerificationRepository;
 import com.example.springcat.persisted.UserRepository;
 import com.example.springcat.persisted.entity.EmailVerificationEntity;
+import com.example.springcat.persisted.entity.RoleEntity;
 import com.example.springcat.persisted.entity.UserEntity;
+import com.example.springcat.persisted.entity.common.Role;
 import com.example.springcat.security.dto.UserInfo;
 import com.example.springcat.security.rest.Register;
 import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +43,7 @@ public class RegisterService extends RegisterTemplate {
      * @throws Exception
      */
     @Modifying
-    public final UserInfo register(Register source) throws Exception {
+    public UserInfo register(Register source) throws Exception {
         return super.createUserAndSendEmail(source);
     }
 
@@ -56,6 +59,7 @@ public class RegisterService extends RegisterTemplate {
         log.info("Register the user ({})", source.getEmail());
         val user = registerMapper.toUserEntity(source);
         user.setPaswrd(passwordEncoder.encode(user.getPaswrd()));
+        user.setRoles(Sets.newHashSet(RoleEntity.builder().code(Role.USER).value(Role.USER.getValue()).build()));
         return userRepo.save(user);
     }
 
@@ -68,12 +72,12 @@ public class RegisterService extends RegisterTemplate {
     @Modifying
     protected void sendVerification(UserEntity user) throws Exception {
         log.info("Sending the email to the Register({})", user.getEmail());
-        val hashCode = generatedHash();
-        user.setVerifications(Sets.newHashSet(EmailVerificationEntity.builder()
+        Set<EmailVerificationEntity> verifications = Sets.newHashSet(EmailVerificationEntity.builder()
             .userId(user.getId())
-            .code(hashCode)
+            .code(generatedHash())
             .expiredAt(LocalDateTime.now().plusDays(1L))
-            .build()));
+            .build());
+        user.setVerifications(verifications);
 
         userRepo.save(user);
     }
@@ -81,7 +85,6 @@ public class RegisterService extends RegisterTemplate {
     /**
      * convert user entity to user info DTO.
      */
-    @Override
     protected UserInfo convert(UserEntity entity) {
         return registerMapper.toUserInfo(entity);
     }

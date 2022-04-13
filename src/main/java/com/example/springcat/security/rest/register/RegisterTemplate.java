@@ -16,7 +16,7 @@ public abstract class RegisterTemplate {
      * @throws Exception sending email fail
      * @return
      */
-    public final UserInfo createUserAndSendEmail(Register source) throws Exception {
+    public UserInfo createUserAndSendEmail(Register source) throws Exception {
         val user = createUser(source);
         sendVerification(user); // FIXME. spring boot 的方法內部呼叫 (A method invoke B method) 會導致 Transactional 失效, 故這個 design pattern 不可行
         return convert(user);

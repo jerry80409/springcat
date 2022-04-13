@@ -3,17 +3,19 @@ package com.example.springcat.persisted.entity;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
-import static lombok.AccessLevel.PRIVATE;
+import static lombok.AccessLevel.PROTECTED;
 
-import com.google.common.collect.Sets;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.*;
 import lombok.Builder.Default;
+import lombok.ToString.Exclude;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.Hibernate;
 
 /**
  * User entity
@@ -25,9 +27,10 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Getter
 @Setter
+@ToString
 @SuperBuilder
-@NoArgsConstructor
-@AllArgsConstructor(access = PRIVATE)
+@RequiredArgsConstructor
+@AllArgsConstructor(access = PROTECTED)
 @Table(
     indexes = {@Index(columnList = "email", name = "idx_user_email")},
     uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
@@ -94,16 +97,36 @@ public class UserEntity extends AbstractEntity<String> implements Serializable {
     /**
      * user roles, join on role table
      */
+    @Exclude
     @Singular
     @JoinColumn(name = "user_id")
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    private Set<RoleEntity> roles = Sets.newHashSet();
+    private Set<RoleEntity> roles;
 
     /**
      * user email verification record
      * 不確定 1 對 1 的設計好不好, 單純希望讓欄位簡單一點, 所以區隔
      */
+    @Exclude
+    @Singular
     @JoinColumn(name = "user_id")
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<EmailVerificationEntity> verifications;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        UserEntity that = (UserEntity) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
